@@ -24,11 +24,9 @@ export const getStaticProps: GetStaticProps = async () => {
 export default function Home({ posts }: Props) {
   return (
     <main>
-      <h1>ISR Notion Example</h1>
+      <h1>As it is written</h1>
 
-      <section>
-        <h2>Blog posts</h2>
-
+      <section className="prose prose-quoteless prose-neutral dark:prose-invert">
         {posts.map((post) => {
           const title = post.properties.page.title[0].plain_text;
           const description = post.properties.abstract.rich_text[0].plain_text;

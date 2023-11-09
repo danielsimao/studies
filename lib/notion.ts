@@ -44,7 +44,10 @@ export async function createPosts(posts: BlogPost[]) {
   }
 
   for (const post of posts) {
-    const uuid = post.id;
+    const uuid = (post.properties.article as any).rich_text[0].href.split(
+      "https://www.notion.so/"
+    )[1];
+
     const slug = post.properties.slug.rich_text[0].plain_text;
     const mdblocks = await n2m.pageToMarkdown(uuid);
     const mdString = n2m.toMarkdownString(mdblocks);

@@ -41,7 +41,7 @@ export default function BlogPost({ postData }: Props) {
     <main>
       <Link href="/">Back to homepage</Link>
 
-      <article>
+      <article className="prose prose-quoteless prose-neutral dark:prose-invert">
         <ReactMarkdown remarkPlugins={[remarkMdx]}>{postData}</ReactMarkdown>
       </article>
     </main>
