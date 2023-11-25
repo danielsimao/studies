@@ -7,7 +7,8 @@ import { ONE_MINUTE_IN_SECONDS } from "../util/constants";
 import { filterPosts } from "../util/notion";
 
 type Props = {
-  postData: string;
+  content: string;
+  post: any;
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -26,23 +27,25 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const postId = params.id as string;
-  const postData = await getPostData(postId);
+  const { content, post } = await getPostData(postId);
 
   return {
     props: {
-      postData,
+      content,
+      post,
     },
     revalidate: ONE_MINUTE_IN_SECONDS,
   };
 };
 
-export default function BlogPost({ postData }: Props) {
+export default function BlogPost({ content, post }: Props) {
   return (
     <main>
-      <Link href="/">Back to homepage</Link>
-
+      {/* <Link href="/">Back to homepage</Link> */}
       <article className="prose prose-quoteless prose-neutral dark:prose-invert">
-        <ReactMarkdown remarkPlugins={[remarkMdx]}>{postData}</ReactMarkdown>
+        <h1>{post.properties.page.title[0].plain_text}</h1>
+        <ReactMarkdown remarkPlugins={[remarkMdx]}>{content}</ReactMarkdown>
+        <p>{post.properties.date.date.start}</p>
       </article>
     </main>
   );

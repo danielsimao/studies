@@ -66,7 +66,6 @@ h4 {
 .prose > :first-child {
   /* Override removing top margin, causing layout shift */
   margin-top: 1.25em !important;
-  margin-bottom: 1.25em !important;
 }
 
 code[class*="language-"],
@@ -105,4 +104,21 @@ table {
 
 .prose .callout > p {
   margin: 0 !important;
+}
+
+.prose h1 {
+  margin-bottom: 0 !important;
+}
+
+.prose h1 {
+  margin-bottom: 0 !important;
+}
+
+.prose p:first-of-type {
+  margin-top: 0.5em !important;
+}
+
+.prose h1,
+.prose p:first-of-type {
+  text-align: center;
 }

@@ -22,6 +22,14 @@ export async function getPosts(databaseId) {
   return response.results as BlogPost[];
 }
 
+export async function getPostBySlug(databaseId: string, slug: string) {
+  const posts = await getPosts(databaseId);
+
+  return posts.find(
+    (post) => post.properties.slug.rich_text[0].plain_text === slug
+  );
+}
+
 export function getPostsIds() {
   if (!fs.existsSync(POSTS_DIR)) {
     fs.mkdirSync(POSTS_DIR);
@@ -50,6 +58,7 @@ export async function createPosts(posts: BlogPost[]) {
 
     const slug = post.properties.slug.rich_text[0].plain_text;
     const mdblocks = await n2m.pageToMarkdown(uuid);
+
     const mdString = n2m.toMarkdownString(mdblocks);
     const filename = `${POSTS_DIR}/${slug}.mdx`;
 
@@ -65,5 +74,9 @@ export async function getPostData(id: string) {
   const processedContent = await remark().use(mdx).process(fileContents);
   const contentHtml = processedContent.toString();
 
-  return contentHtml;
+  const post = await getPostBySlug(process.env.NOTION_DATABASE_ID, id);
+
+  return { content: contentHtml, post };
 }
+
+export { notionClient };

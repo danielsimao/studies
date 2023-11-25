@@ -3,6 +3,7 @@ import { getPosts } from "../lib/notion";
 import { filterPosts, sortPosts } from "../util/notion";
 import { BlogPost } from "../types/notion";
 import { ONE_MINUTE_IN_SECONDS } from "../util/constants";
+import Link from "next/link";
 
 type Props = {
   posts: BlogPost[];
@@ -23,35 +24,31 @@ export const getStaticProps: GetStaticProps = async () => {
 
 export default function Home({ posts }: Props) {
   return (
-    <main>
-      <h1>As it is written</h1>
+    <section className="prose prose-quoteless prose-neutral dark:prose-invert">
+      {posts.map((post) => {
+        const title = post.properties.page.title[0].plain_text;
+        const description = post.properties.abstract.rich_text[0].plain_text;
+        const publishDate = post.properties.date.date.start;
+        const url = `/${post.properties.slug.rich_text[0].plain_text}`;
+        const tags = post.properties.tags.multi_select
+          .map(({ name }) => name)
+          .join(", ");
 
-      <section className="prose prose-quoteless prose-neutral dark:prose-invert">
-        {posts.map((post) => {
-          const title = post.properties.page.title[0].plain_text;
-          const description = post.properties.abstract.rich_text[0].plain_text;
-          const publishDate = post.properties.date.date.start;
-          const url = `/${post.properties.slug.rich_text[0].plain_text}`;
-          const tags = post.properties.tags.multi_select
-            .map(({ name }) => name)
-            .join(", ");
+        return (
+          <article key={post.id}>
+            <Link href={url}>
+              <h3>{title}</h3>
+            </Link>
 
-          return (
-            <article key={post.id}>
-              <a href={url}>
-                <h3>{title}</h3>
-              </a>
+            <p>{description}</p>
 
-              <p>{description}</p>
-
-              <ul>
-                <li>Published: {publishDate}</li>
-                <li>Tags: {tags}</li>
-              </ul>
-            </article>
-          );
-        })}
-      </section>
-    </main>
+            <ul>
+              <li>Published: {publishDate}</li>
+              {/* <li>Tags: {tags}</li> */}
+            </ul>
+          </article>
+        );
+      })}
+    </section>
   );
 }

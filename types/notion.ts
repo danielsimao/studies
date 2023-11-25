@@ -110,9 +110,10 @@ export type BlogPost = PageObjectResponse & {
     canonical: Canonical;
     abstract: Abstract;
     page: Page;
-    page2: Page;
+    article: any;
     date: Date;
     slug: Slug;
     tags: Tags;
+    views: number;
   };
 };
