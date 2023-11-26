@@ -5,6 +5,7 @@ import { NotionToMarkdown } from "notion-to-md";
 import { remark } from "remark";
 import mdx from "remark-mdx";
 import { BlogPost } from "../types/notion";
+import slugify from "slugify";
 
 const POSTS_DIR = path.join(process.cwd(), "posts");
 
@@ -26,7 +27,11 @@ export async function getPostBySlug(databaseId: string, slug: string) {
   const posts = await getPosts(databaseId);
 
   return posts.find(
-    (post) => post.properties.slug.rich_text[0].plain_text === slug
+    (post) =>
+      slugify(
+        post.properties.article.rich_text[0].plain_text,
+        "-"
+      ).toLowerCase() === slug
   );
 }
 
@@ -56,13 +61,17 @@ export async function createPosts(posts: BlogPost[]) {
       "https://www.notion.so/"
     )[1];
 
-    const slug = post.properties.slug.rich_text[0].plain_text;
+    // const slug = post.properties.slug.rich_text[0].plain_text;
+    const slug = slugify(
+      post.properties.article.rich_text[0].plain_text,
+      "-"
+    ).toLowerCase();
     const mdblocks = await n2m.pageToMarkdown(uuid);
 
     const mdString = n2m.toMarkdownString(mdblocks);
     const filename = `${POSTS_DIR}/${slug}.mdx`;
 
-    fs.writeFile(filename, mdString, (err) => {
+    fs.writeFile(filename, mdString.parent, (err) => {
       err !== null && console.log(err);
     });
   }

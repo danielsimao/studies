@@ -27,6 +27,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const postId = params.id as string;
+
+  console.log(postId);
   const { content, post } = await getPostData(postId);
 
   return {
@@ -43,7 +45,7 @@ export default function BlogPost({ content, post }: Props) {
     <main>
       {/* <Link href="/">Back to homepage</Link> */}
       <article className="prose prose-quoteless prose-neutral dark:prose-invert">
-        <h1>{post.properties.page.title[0].plain_text}</h1>
+        <h1>{post.properties.article.rich_text[0].plain_text}</h1>
         <ReactMarkdown remarkPlugins={[remarkMdx]}>{content}</ReactMarkdown>
         <p>{post.properties.date.date.start}</p>
       </article>

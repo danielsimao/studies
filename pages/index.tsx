@@ -4,6 +4,7 @@ import { filterPosts, sortPosts } from "../util/notion";
 import { BlogPost } from "../types/notion";
 import { ONE_MINUTE_IN_SECONDS } from "../util/constants";
 import Link from "next/link";
+import slugify from "slugify";
 
 type Props = {
   posts: BlogPost[];
@@ -26,13 +27,16 @@ export default function Home({ posts }: Props) {
   return (
     <section className="prose prose-quoteless prose-neutral dark:prose-invert">
       {posts.map((post) => {
-        const title = post.properties.page.title[0].plain_text;
+        const title = post.properties.article.rich_text[0].plain_text;
         const description = post.properties.abstract.rich_text[0].plain_text;
         const publishDate = post.properties.date.date.start;
-        const url = `/${post.properties.slug.rich_text[0].plain_text}`;
-        const tags = post.properties.tags.multi_select
-          .map(({ name }) => name)
-          .join(", ");
+        const url = `/${slugify(
+          post.properties.article.rich_text[0].plain_text,
+          "-"
+        ).toLowerCase()}`;
+        // const tags = post.properties.tags.multi_select
+        //   .map(({ name }) => name)
+        //   .join(", ");
 
         return (
           <article key={post.id}>
